@@ -1,12 +1,23 @@
-import os
+from pyexpat.model import XML_CTYPE_CHOICE
+from sys import flags
 import cv2
+import pathlib
 
-face_cascade = cv2.CascadeClassifier='face.xml'
-img = cv2.imread('image.jpg')
-faces = face_cascade.detectMultiS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       cale(img, 1.1, 4)
+cascade_path =pathlib.Path(cv2.__file__).parent.absolute() / "data_haarcascade_frontalface_default.xml"
 
-for (x, y, w, h) in faces: 
-  cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-  cv2.imwrite("face_detected.png", img) 
+clf= cv2.CascadeClassifier(str(cascade_path))
 
-print('Successfully saved')
+camera=cv2.VideoCapture(0)
+
+while True :
+  _, frame = camera.read()
+  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+  faces = clf.detectMultiScale(
+    gray,
+    scaleFactor = 1.1,
+    minNeighbors=5,
+    minSize=(30,30),
+    flags=cv2.CASCADE_SCALE_IMAGE
+    
+    
+  )
